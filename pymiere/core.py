@@ -36,7 +36,7 @@ def check_premiere_is_alive(crash=True):
         return False
     # is the CEP panel reachable
     try:
-        response = requests.get(PANEL_URL)
+        response = requests.get(PANEL_URL, timeout=60)
     except requests.exceptions.ConnectionError:
         msg = "No connection could be established to Premiere Pro, check that the pymiere pannel is loaded"
         if crash:
@@ -94,7 +94,7 @@ def eval_script(code=None, filepath=None, decode_json=True):
     code = code.replace("\\", "\\\\")
 
     # send code to premiere (adding try statement to prevent error popup message locking premiere UI)
-    response = requests.post(PANEL_URL, json={"to_eval": "try{\n" + code + "\n}catch(e){e.error=true;ExtendJSON.stringify(e)}"})
+    response = requests.post(PANEL_URL, json={"to_eval": "try{\n" + code + "\n}catch(e){e.error=true;ExtendJSON.stringify(e)}"}, timeout=60)
 
     # handle response
     response_text = response.content
