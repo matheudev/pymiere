@@ -11,6 +11,8 @@ import json
 import subprocess
 from distutils.version import StrictVersion
 import platform
+from security import safe_command
+
 if platform.system().lower() == "windows":
     WINDOWS_SYSTEM = True
     try:
@@ -54,9 +56,9 @@ def start_premiere(use_bat=False):
     if use_bat and WINDOWS_SYSTEM:
         # we don't call directly premiere exec here so it's not a child of this script.
         # It will still run after this script is killed (seems to be always the case except in Pycharm...)
-        subprocess.call([os.path.join(__file__, "..", "bin", "start_premiere.bat"), exe_path])
+        safe_command.run(subprocess.call, [os.path.join(__file__, "..", "bin", "start_premiere.bat"), exe_path])
     elif WINDOWS_SYSTEM:
-        subprocess.Popen(exe_path, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        safe_command.run(subprocess.Popen, exe_path, creationflags=subprocess.CREATE_NEW_CONSOLE)
     else:
         subprocess.Popen(["open", exe_path])
 
