@@ -185,7 +185,7 @@ def _get_last_premiere_exe_mac():
     return premiere_apps[0]["path"]
 
 
-def _get_installed_softwares_info(name_filter, names=["DisplayVersion", "InstallLocation"]):
+def _get_installed_softwares_info(name_filter, names=None):
     """
     WINDOWS ONLY
     Looking into Uninstall key in Windows registry, we can get some infos about installed software
@@ -193,6 +193,7 @@ def _get_installed_softwares_info(name_filter, names=["DisplayVersion", "Install
     :param name_filter: (str) filter software containing this name
     :return: (list of dict) info of software found
     """
+    names = ["DisplayVersion", "InstallLocation"] if names is None else names
     reg = wr.ConnectRegistry(None, wr.HKEY_LOCAL_MACHINE)
     key = wr.OpenKey(reg, r"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
     apps_info = list()
